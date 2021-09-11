@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Mace
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -11,10 +13,10 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Chain
+  - Player
+  - Enemy
+  - Mace
   - 
   - 
   - 
@@ -40,4 +42,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 1873032357
+    locked: 0
+  - name: Enemy
+    uniqueID: 3271986681
+    locked: 0
+  - name: Mace
+    uniqueID: 1134350163
+    locked: 0
+  - name: Chain
+    uniqueID: 2894557515
     locked: 0
