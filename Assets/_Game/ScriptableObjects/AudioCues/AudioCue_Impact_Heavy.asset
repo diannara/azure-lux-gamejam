@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a142edc35eeb214cbaba2f053eb8e05, type: 3}
+  m_Name: AudioCue_Impact_Heavy
+  m_EditorClassIdentifier: 
+  SequenceMode: 1
+  IsLooping: 0
+  RandomizePitch: 0
+  PitchRange: {x: 1, y: 1}
+  m_audioClips:
+  - {fileID: 8300000, guid: b3e0e95217fccdd43ba1803b27c4862c, type: 3}
+  - {fileID: 8300000, guid: 7e8ee9e708ac0cc4d98dbce330f3c304, type: 3}
+  - {fileID: 8300000, guid: 8eb3b3f55050be440aec3537406e0780, type: 3}
+  - {fileID: 8300000, guid: 8e32e5521311a9c47bd940ea3304cab6, type: 3}
+  - {fileID: 8300000, guid: e79bdc7e071236b43aa7fc58e743734a, type: 3}

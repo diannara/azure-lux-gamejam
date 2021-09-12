@@ -19,7 +19,7 @@ namespace Diannara.ScriptableObjects.Channels
 
         public UnityAction<AudioCueKey> OnAudioFinished;
 
-        public AudioCueKey RequestAudio(AudioCue audioCue, AudioConfig audioConfigration, Vector3 positionInSpace = default)
+        public AudioCueKey RequestAudio(AudioCue audioCue, AudioConfig audioConfigration = null, Vector3 positionInSpace = default)
         {
             AudioCueKey key = AudioCueKey.Invalid;
 

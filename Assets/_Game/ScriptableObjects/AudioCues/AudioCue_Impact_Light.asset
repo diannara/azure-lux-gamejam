@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a142edc35eeb214cbaba2f053eb8e05, type: 3}
+  m_Name: AudioCue_Impact_Light
+  m_EditorClassIdentifier: 
+  SequenceMode: 1
+  IsLooping: 0
+  RandomizePitch: 0
+  PitchRange: {x: 1, y: 1}
+  m_audioClips:
+  - {fileID: 8300000, guid: 11112a83ba6218d48893b0264a0960e6, type: 3}
+  - {fileID: 8300000, guid: 2b0d14abdd760ef46bdc06de6c83f98d, type: 3}
+  - {fileID: 8300000, guid: b03c84020fc143e4a85260b4f26c16e4, type: 3}
+  - {fileID: 8300000, guid: 843e28f1f7116dd47ae28e7e62a2203c, type: 3}
+  - {fileID: 8300000, guid: d022b0105c625f742a2aa99f4b07c991, type: 3}

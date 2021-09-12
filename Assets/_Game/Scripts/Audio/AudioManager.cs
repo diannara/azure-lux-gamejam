@@ -12,6 +12,10 @@ namespace Diannara.Audio
 		[Header("Player Audio Settings")]
 		[SerializeField] private PlayerAudioSettings m_playerAudioSettings;
 
+		[Header("Defaults")]
+		[SerializeField] private AudioConfig m_defaultConfigSFX;
+		[SerializeField] private AudioConfig m_defaultConfigMusic;
+
 		[Header("Soundtrack Settings")]
 		[SerializeField] private float m_fadeOutDuration = 2f;
 		[SerializeField] private float m_fadeInDuration = 1f;
@@ -217,8 +221,13 @@ namespace Diannara.Audio
 
 			if (audioConfig == null)
 			{
-				Debug.LogWarning("AudioManager :: PlayMusicTrack() :: AudioConfig sent along was NULL!");
-				return AudioCueKey.Invalid;
+				if (m_defaultConfigMusic == null)
+				{
+					Debug.LogWarning("AudioManager :: PlayMusicTrack() :: AudioConfig sent along was NULL and no default AudioConfig for music available!");
+					return AudioCueKey.Invalid;
+				}
+
+				audioConfig = m_defaultConfigMusic;
 			}
 
 			AudioClip clip = audioCue.GetNextClip();
@@ -269,8 +278,13 @@ namespace Diannara.Audio
 
 			if (audioConfig == null)
 			{
-				Debug.LogWarning("AudioManager :: PlayAudioCue() :: AudioConfig sent along was NULL!");
-				return AudioCueKey.Invalid;
+				if (m_defaultConfigSFX == null)
+				{
+					Debug.LogWarning("AudioManager :: PlayAudioCue() :: AudioConfig sent along was NULL and no default AudioConfig for SFX available!");
+					return AudioCueKey.Invalid;
+				}
+
+				audioConfig = m_defaultConfigSFX;
 			}
 
 			AudioClip clipToPlay = audioCue.GetNextClip();
