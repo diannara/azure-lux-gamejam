@@ -1,7 +1,5 @@
 using UnityEngine;
 
-using Diannara.ScriptableObjects.Pooling;
-
 namespace Diannara.Gameplay.Enemy
 {
 	[RequireComponent(typeof(Rigidbody2D))]
@@ -11,9 +9,6 @@ namespace Diannara.Gameplay.Enemy
 		[Header("Settings")]
 		[SerializeField] private float m_speed;
 		[SerializeField] private bool m_disableMovement;
-
-		[Header("Pools")]
-		[SerializeField] private ObjectPool m_pool;
 
 		private Health m_health;
 		private Rigidbody2D m_rigidbody;
@@ -29,26 +24,12 @@ namespace Diannara.Gameplay.Enemy
 
 		private void OnDisable()
 		{
-			m_health.OnDeath -= OnDeath;
 			m_health.OnInvincibleStatusChanged -= OnInvincibleStatusChanged;
 		}
 
 		private void OnEnable()
 		{
-			m_health.OnDeath += OnDeath;
 			m_health.OnInvincibleStatusChanged += OnInvincibleStatusChanged;
-		}
-
-		private void OnDeath()
-		{
-			if(m_pool != null)
-			{
-				m_pool.Return(this.gameObject);
-			}
-			else
-			{
-				Destroy(this.gameObject);
-			}
 		}
 
 		private void OnInvincibleStatusChanged(bool status)

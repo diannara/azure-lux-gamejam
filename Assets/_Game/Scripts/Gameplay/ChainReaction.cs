@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using Diannara.ScriptableObjects.Pooling;
+
 namespace Diannara.Gameplay
 {
 	[RequireComponent(typeof(Health))]
@@ -8,6 +10,9 @@ namespace Diannara.Gameplay
 	{
 		[Header("Damage Settings")]
 		[SerializeField] private int m_damage;
+
+		[Header("Pools")]
+		[SerializeField] private ObjectPool m_chainImpactEffects;
 
 		[Header("Collision Settings")]
 		[SerializeField] private string m_collisionTag;
@@ -18,13 +23,42 @@ namespace Diannara.Gameplay
 
 		private Health m_health;
 		private Rigidbody2D m_rigidbody;
+		private ImpactHandler m_impactHandler;
+		private Transform m_transform;
 
 		private bool m_enableChainReaction;
 
 		private void Awake()
 		{
+			m_transform = this.transform;
 			m_health = GetComponent<Health>();
+			m_impactHandler = GetComponent<ImpactHandler>();
 			m_rigidbody = GetComponent<Rigidbody2D>();
+		}
+
+		private void HandleDamage(Collision2D collision, float impulse)
+		{
+			m_health.TakeDamage(m_damage, true);
+
+			Health health = collision.gameObject.GetComponent<Health>();
+			if (health != null && impulse > m_minimumForceForDamage)
+			{
+				health.TakeDamage(m_damage, true);
+			}
+		}
+
+		private void HandleImpact(Collision2D collision)
+		{
+			if(m_impactHandler)
+			{
+				m_impactHandler.Knockback(collision.rigidbody.velocity.normalized, m_hitForceModifier);
+			}
+
+			ImpactHandler impactHandler = collision.gameObject.GetComponent<ImpactHandler>();
+			if (impactHandler != null)
+			{
+				impactHandler.Knockback(m_rigidbody.velocity.normalized, m_hitForceModifier);
+			}
 		}
 
 		private void OnCollisionEnter2D(Collision2D collision)
@@ -40,22 +74,17 @@ namespace Diannara.Gameplay
 			}
 
 			float impulse = GameUtilities.CalulcateImpulse(collision);
-			Debug.Log($"Weapon :: Collision Detected! :: {gameObject.name} hit {collision.rigidbody.gameObject.name} ({collision.gameObject.tag}) with a force of {impulse} in the direction of {m_rigidbody.velocity}.");
-			//Debug.Break();
 
-			ImpactHandler impactHandler = collision.gameObject.GetComponent<ImpactHandler>();
-			if (impactHandler != null)
+			// Debug.Log($"ChainReaction :: Collision Detected! :: {gameObject.name} hit {collision.rigidbody.gameObject.name} ({collision.gameObject.tag}) with a force of {impulse} in the direction of {m_rigidbody.velocity}.");
+			// Debug.Break();
+
+			if (m_chainImpactEffects != null)
 			{
-				// 1. Knockback target
-				impactHandler.Knockback(m_rigidbody.velocity.normalized, m_hitForceModifier);
+				m_chainImpactEffects.Spawn(m_transform);
 			}
 
-			Health health = collision.gameObject.GetComponent<Health>();
-			if(health != null && impulse > m_minimumForceForDamage)
-			{
-				// 2. Even if the target being hit is currently invincible, we are still going to cause damage
-				health.TakeDamage(m_damage, true);
-			}
+			HandleImpact(collision);
+			HandleDamage(collision, impulse);
 		}
 
 		private void OnDisable()

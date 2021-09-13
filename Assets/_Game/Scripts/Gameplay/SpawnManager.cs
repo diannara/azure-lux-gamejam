@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Diannara.Enums;
+using Diannara.Gameplay.Collectables;
 using Diannara.Gameplay.Enemy;
+using Diannara.ScriptableObjects.Channels;
 using Diannara.ScriptableObjects.Gameplay;
 
 namespace Diannara.Gameplay
@@ -13,13 +16,17 @@ namespace Diannara.Gameplay
 		[SerializeField] private bool m_enableSpawning = true;
 		[SerializeField] private float m_spawnRadius;
 
+		[Header("Channels")]
+		[SerializeField] private GameStateHandler m_gameStateHandler;
+		[SerializeField] private DeathEventChannel m_deathEventChannel;
+
 		[Header("Spawners")]
 		[SerializeField] private SpawnSettings[] m_spawnSettings;
 
 		[Header("References")]
 		[SerializeField] private Transform m_enemyTarget;
 
-		private Dictionary<string, int> m_spawnCount = new Dictionary<string, int>();
+		private Dictionary<CharacterType, int> m_spawnCount = new Dictionary<CharacterType, int>();
 
 		private Vector3 GetRandomSpawnPoint()
 		{
@@ -38,47 +45,112 @@ namespace Diannara.Gameplay
 			return randomDirection;
 		}
 
-		private IEnumerator SpawnEnemies(string name, SpawnSettings settings)
+		private void OnDisable()
 		{
-
-			while(true)
+			if(m_deathEventChannel != null)
 			{
-				int currentCount = 0;
-				m_spawnCount.TryGetValue(name, out currentCount);
+				m_deathEventChannel.OnDeathEvent -= OnDeath;
+			}
 
-				if(m_enableSpawning && currentCount < settings.MaxEnemyCount)
+			if(m_gameStateHandler != null)
+			{
+				m_gameStateHandler.OnGameStateChanged -= OnGameStateChange;
+			}
+		}
+
+		private void OnEnable()
+		{
+			if(m_deathEventChannel != null)
+			{
+				m_deathEventChannel.OnDeathEvent += OnDeath;
+			}
+
+			if (m_gameStateHandler != null)
+			{
+				m_gameStateHandler.OnGameStateChanged += OnGameStateChange;
+			}
+		}
+
+		private IEnumerator SpawnEnemies(CharacterType type, SpawnSettings settings)
+		{
+			yield return new WaitForSeconds(settings.SpawnDelay);
+
+			while (true)
+			{
+				if (m_spawnCount.TryGetValue(type, out int currentCount))
 				{
-					m_spawnCount[name] += 1;
-
-					GameObject enemyGO = settings.Pool.Spawn(GetRandomSpawnPoint(), Quaternion.identity, Vector3.one);
-					EnemyMovement enemy = enemyGO.GetComponent<EnemyMovement>();
-					if(enemy != null)
+					if (m_enableSpawning && currentCount < settings.MaxEnemyCount)
 					{
-						enemy.SetTarget(m_enemyTarget);
+						m_spawnCount[type] += 1;
+
+						GameObject enemyGO = settings.Pool.Spawn(GetRandomSpawnPoint(), Quaternion.identity, Vector3.one);
+						EnemyMovement enemy = enemyGO.GetComponent<EnemyMovement>();
+						if (enemy != null)
+						{
+							enemy.SetTarget(m_enemyTarget);
+						}
 					}
 				}
 				yield return new WaitForSeconds(settings.SpawnRate);
 			}
 		}
 
-		private void Start()
+		private void OnGameStateChange(GameStateType current, GameStateType previous)
 		{
-			StartSpawning();
-		}
-
-		public void StartSpawning()
-		{
-			foreach (SpawnSettings settings in m_spawnSettings)
+			if(current == GameStateType.Playing)
 			{
-				string name = settings.Pool.Prefab.name;
-				m_spawnCount.Add(name, 0);
-				StartCoroutine(SpawnEnemies(name, settings));
+				StartSpawning();
+			}
+			else
+			{
+				StopSpawning();
 			}
 		}
 
-		public void OnDeath()
+		private void StartSpawning()
 		{
+			m_enableSpawning = true;
 
+			m_spawnCount.Clear();
+
+			foreach (SpawnSettings settings in m_spawnSettings)
+			{
+				GameObject go = settings.Pool.Prefab;
+				Health health = go.GetComponent<Health>();
+
+				if(health != null)
+				{
+					m_spawnCount.Add(health.Type, 0);
+					StartCoroutine(SpawnEnemies(health.Type, settings));
+				}
+			}
+		}
+
+		private void StopSpawning()
+		{
+			m_enableSpawning = false;
+
+			StopAllCoroutines();
+
+			EnemyController[] enemies = FindObjectsOfType<EnemyController>();
+			foreach(EnemyController enemy in enemies)
+			{
+				enemy.DestroyEnemy();
+			}
+
+			ICollectable[] collectables = FindObjectsOfType<BaseCollectible>();
+			foreach (ICollectable collectable in collectables)
+			{
+				collectable.DestroyCollectable();
+			}
+		}
+
+		public void OnDeath(CharacterType type)
+		{
+			if(m_spawnCount.ContainsKey(type))
+			{
+				m_spawnCount[type] -= 1;
+			}
 		}
 	}
 }

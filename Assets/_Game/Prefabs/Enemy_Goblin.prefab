@@ -11,11 +11,13 @@ GameObject:
   - component: {fileID: 5238757925620911712}
   - component: {fileID: 5238757925620911719}
   - component: {fileID: 5238757925620911718}
+  - component: {fileID: -8293297423083450720}
   - component: {fileID: 7581704114794129415}
   - component: {fileID: 5238757925620911713}
   - component: {fileID: 2304860280124309923}
   - component: {fileID: 7110668883840320612}
   - component: {fileID: -6779738421257871437}
+  - component: {fileID: -1612804999903094970}
   m_Layer: 8
   m_Name: Enemy_Goblin
   m_TagString: Enemy
@@ -75,6 +77,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.4
+--- !u!114 &-8293297423083450720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5238757925620911717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6818d62ef5c26340bf3750957ecd05c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_pool: {fileID: 11400000, guid: f0953a21525393e49970bbaad8ffbd95, type: 2}
 --- !u!114 &7581704114794129415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,7 +104,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_speed: 3
   m_disableMovement: 0
-  m_pool: {fileID: 11400000, guid: f0953a21525393e49970bbaad8ffbd95, type: 2}
 --- !u!114 &5238757925620911713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,12 +116,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 575833a0685f7c142b0d5cd0a5437b5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_characterType: 1
   m_maxHealth: 3
   m_currentHealth: 3
   m_isDead: 0
   m_takeDamageAudio: {fileID: 11400000, guid: 1bf4cd7d05bfbf449bd5f86be45bd701, type: 2}
   m_audioCueEventChannel: {fileID: 11400000, guid: 255ac9204127e954c93fb7ab0b811bc1, type: 2}
+  m_deathEventChannel: {fileID: 11400000, guid: cca713c740b0b874c9839428341d07d8, type: 2}
+  m_healthStat: {fileID: 0}
+  m_coinsPickupPool: {fileID: 11400000, guid: 509eec9a35fd50f4b91aaae4792da344, type: 2}
   m_damageEffectPool: {fileID: 11400000, guid: 60c0d6de53d64524aa4f8cd690d4203e, type: 2}
+  m_deadbodyPool: {fileID: 11400000, guid: f4b1b066d750bea42bb25ec70da12574, type: 2}
   m_canBecomeInvincible: 1
   m_isInvincible: 0
   m_invincibleTime: 3
@@ -157,9 +176,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_damage: 1
+  m_chainImpactEffects: {fileID: 11400000, guid: 3791b08e61da97b4f907aed445c7681e, type: 2}
   m_collisionTag: Enemy
   m_minimumForceForDamage: 1
   m_hitForceModifier: 2000
+--- !u!114 &-1612804999903094970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5238757925620911717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f6094e4b8af12b4bb74184153c41d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_spawnChance: 20
+  m_lootTable:
+  - {fileID: 11400000, guid: 1a8811ba82a28494091f0e0b1523b6da, type: 2}
 --- !u!1 &5238757926036312651
 GameObject:
   m_ObjectHideFlags: 0

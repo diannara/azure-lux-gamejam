@@ -24,15 +24,7 @@ namespace Diannara.Input
                     ""name"": ""Movement"",
                     ""type"": ""PassThrough"",
                     ""id"": ""5203d547-e509-4753-aa8b-1ab17835bed2"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Swing"",
-                    ""type"": ""Button"",
-                    ""id"": ""8c2bfba7-3c32-466c-80f8-530fdd096837"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -55,7 +47,7 @@ namespace Diannara.Input
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -66,7 +58,7 @@ namespace Diannara.Input
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -77,7 +69,7 @@ namespace Diannara.Input
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -88,32 +80,10 @@ namespace Diannara.Input
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard and Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""cd494611-f34b-46f4-a469-c5c679e6b034"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Swing"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""effa941a-3172-49b8-a38c-ff0fed295c28"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard and Mouse"",
-                    ""action"": ""Swing"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -140,7 +110,6 @@ namespace Diannara.Input
             // Player
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
-            m_Player_Swing = m_Player.FindAction("Swing", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -191,13 +160,11 @@ namespace Diannara.Input
         private readonly InputActionMap m_Player;
         private IPlayerActions m_PlayerActionsCallbackInterface;
         private readonly InputAction m_Player_Movement;
-        private readonly InputAction m_Player_Swing;
         public struct PlayerActions
         {
             private @InputMaster m_Wrapper;
             public PlayerActions(@InputMaster wrapper) { m_Wrapper = wrapper; }
             public InputAction @Movement => m_Wrapper.m_Player_Movement;
-            public InputAction @Swing => m_Wrapper.m_Player_Swing;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -210,9 +177,6 @@ namespace Diannara.Input
                     @Movement.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
                     @Movement.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
                     @Movement.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMovement;
-                    @Swing.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwing;
-                    @Swing.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwing;
-                    @Swing.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwing;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -220,9 +184,6 @@ namespace Diannara.Input
                     @Movement.started += instance.OnMovement;
                     @Movement.performed += instance.OnMovement;
                     @Movement.canceled += instance.OnMovement;
-                    @Swing.started += instance.OnSwing;
-                    @Swing.performed += instance.OnSwing;
-                    @Swing.canceled += instance.OnSwing;
                 }
             }
         }
@@ -239,7 +200,6 @@ namespace Diannara.Input
         public interface IPlayerActions
         {
             void OnMovement(InputAction.CallbackContext context);
-            void OnSwing(InputAction.CallbackContext context);
         }
     }
 }

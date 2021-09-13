@@ -1,60 +1,45 @@
 using UnityEngine;
 
-using Diannara.ScriptableObjects.Input;
-
 namespace Diannara.Gameplay.Player
 {
+	[RequireComponent(typeof(Health))]
+	[RequireComponent(typeof(PlayerMovement))]
 	public class PlayerController : MonoBehaviour
 	{
-		[Header("Settings")]
-		[SerializeField] private float m_minimumChainDistance;
-		[SerializeField] private float m_maximumChainDistance;
-
 		[Header("References")]
-		[SerializeField] private InputReader m_inputReader;
-		[SerializeField] private DistanceJoint2D m_distanceJoint;
+		[SerializeField] private Transform m_playerSpawn;
+		[SerializeField] private Weapon m_weapon;
 
-		private void Start()
+		private Health m_health;
+		private PlayerMovement m_movement;
+		private Transform m_transform;
+
+		public void ActivateDamageBoost(int damage, float duration)
 		{
-			if(m_distanceJoint != null)
+			if(m_weapon != null)
 			{
-				m_distanceJoint.distance = m_minimumChainDistance;
+				m_weapon.ActivateDamageBuff(damage, duration);
 			}
 		}
 
-		private void OnDisable()
+		private void Awake()
 		{
-			if(m_inputReader != null)
-			{
-				m_inputReader.OnSwingEvent -= OnSwing;
-			}
+			m_transform = this.transform;
+			m_health = GetComponent<Health>();
+			m_movement = GetComponent<PlayerMovement>();
 		}
 
-		private void OnEnable()
+		public void ResetPlayer()
 		{
-			if(m_inputReader != null)
-			{
-				m_inputReader.OnSwingEvent += OnSwing;
-			}
-		}
+			m_health.ResetHealth();
+			m_movement.StopMovement();
 
-		private void OnSwing(bool isSwinging)
-		{
-			if(m_distanceJoint == null)
+			if(m_weapon != null)
 			{
-				return;
-			}
+				m_weapon.ResetWeapon();
+			}	
 
-			if(isSwinging)
-			{
-				//m_distanceJoint.autoConfigureDistance = false;
-				m_distanceJoint.distance = m_maximumChainDistance;
-			}
-			else
-			{
-				//m_distanceJoint.autoConfigureDistance = true;
-				m_distanceJoint.distance = m_minimumChainDistance;
-			}
+			m_transform.position = m_playerSpawn.position;
 		}
 	}
 }

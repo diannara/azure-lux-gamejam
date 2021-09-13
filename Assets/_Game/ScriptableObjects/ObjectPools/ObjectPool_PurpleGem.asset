@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d64373c4a1a48f4ea89ca8483b9b9c1, type: 3}
+  m_Name: ObjectPool_PurpleGem
+  m_EditorClassIdentifier: 
+  m_prefab: {fileID: 7426440341034632981, guid: 5a03480c0d87a8446979daa89960e1d8, type: 3}
+  m_initialSize: 5
+  m_canGrow: 1
+  m_growBySize: 5
